@@ -5,7 +5,18 @@ import colour
 from geom.ray import Ray
 
 
+def hit_sphere(center, radius, r):
+    oc = r.origin - center
+    a = r.direction.dot(r.direction)
+    b = 2.0 * oc.dot(r.direction)
+    c = oc.dot(oc) - radius*radius
+    discriminant = b*b - 4*a*c
+    return discriminant > 0
+
+
 def ray_colour(r):
+    if hit_sphere(Vector3(0, 0, -1), 0.5, r):
+        return Vector3(1, 0, 0)
     unit_direction = r.direction.normalized()
     t = 0.5*(unit_direction.y + 1.0)
     return Vector3(1.0, 1.0, 1.0)*(1.0-t) + Vector3(0.5, 0.7, 1.0)*t
