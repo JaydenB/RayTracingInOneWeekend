@@ -2,24 +2,42 @@ import constants
 import image
 from geom.vector import Vector3
 import colour
+from geom.ray import Ray
+
+
+def ray_colour(r):
+    unit_direction = r.direction.normalized()
+    t = 0.5*(unit_direction.y + 1.0)
+    return Vector3(1.0, 1.0, 1.0)*(1.0-t) + Vector3(0.5, 0.7, 1.0)*t
 
 
 def main():
-    image_width = 256
-    image_height = 256
+    # Image
+    aspect_ratio = 16.0 / 9.0
+    image_width = 400
+    image_height = image_width/aspect_ratio
+
+    # Camera
+    viewport_height = 2.0
+    viewport_width = aspect_ratio * viewport_height
+    focal_length = 1.0
+
+    origin = Vector3(0, 0, 0)
+    horizontal = Vector3(viewport_width, 0, 0)
+    vertical = Vector3(0, viewport_height, 0)
+    lower_left_corner = origin - horizontal/2 - vertical/2 - Vector3(0, 0, focal_length)
 
     render_data = list()
     print("Commencing Rendering.")
-    for j in reversed(range(0, image_height)):
+    for j in reversed(range(0, int(image_height))):
         print("Scanlines remaining: %s" % j, end="\r")
         for i in range(0, image_width):
-            r = i / (image_width-1)
-            g = j / (image_height-1)
-            b = 0.25
+            u = i / (image_width-1)
+            v = j / (image_height-1)
 
-            pixel_colour = Vector3(i/(image_width-1),
-                                   j/(image_height-1),
-                                   0.25)
+            r = Ray(origin, lower_left_corner + horizontal*u + vertical*v - origin)
+
+            pixel_colour = ray_colour(r)
 
             render_data.append(colour.write_colour(pixel_colour))
     print("\nDone.\n")

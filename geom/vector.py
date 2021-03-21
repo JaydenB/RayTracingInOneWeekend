@@ -31,7 +31,7 @@ class Vector3:
     def length_squared(self):
         return self.x*self.x + self.y*self.y + self.z*self.z
 
-    def normalised(self):
+    def normalized(self):
         return self/self.length()
 
     def dot(self, other):
