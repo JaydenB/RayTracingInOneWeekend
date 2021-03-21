@@ -1,5 +1,7 @@
 import constants
 import image
+from geom.vector import Vector3
+import colour
 
 
 def main():
@@ -15,11 +17,11 @@ def main():
             g = j / (image_height-1)
             b = 0.25
 
-            ir = 255.999*r
-            ig = 255.999*g
-            ib = 255.999*b
+            pixel_colour = Vector3(i/(image_width-1),
+                                   j/(image_height-1),
+                                   0.25)
 
-            render_data.append("%s %s %s" % (ir, ig, ib))
+            render_data.append(colour.write_colour(pixel_colour))
     print("\nDone.\n")
 
     file = image.write_image(
