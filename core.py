@@ -8,6 +8,9 @@ from geom.ray import Ray
 import utils
 from geom.hittable import HitRecord, HittableList
 from geom.sphere import Sphere
+from camera import Camera
+
+from datetime import datetime
 
 
 def hit_sphere(center, radius, r):
@@ -36,6 +39,7 @@ def main():
     aspect_ratio = 16.0 / 9.0
     image_width = 400
     image_height = image_width/aspect_ratio
+    samples_per_pixel = 5
 
     # World
     world = HittableList()
@@ -43,29 +47,23 @@ def main():
     world.append(Sphere(Vector3(0, -100.5, -1), 100))
 
     # Camera
-    viewport_height = 2.0
-    viewport_width = aspect_ratio * viewport_height
-    focal_length = 1.0
+    cam = Camera()
 
-    origin = Vector3(0, 0, 0)
-    horizontal = Vector3(viewport_width, 0, 0)
-    vertical = Vector3(0, viewport_height, 0)
-    lower_left_corner = origin - horizontal/2 - vertical/2 - Vector3(0, 0, focal_length)
-
+    # Render
     render_data = list()
     print("Commencing Rendering.")
+    start_time = datetime.now()
     for j in reversed(range(0, int(image_height))):
         print("Scanlines remaining: %s" % j, end="\r")
         for i in range(0, image_width):
-            u = i / (image_width-1)
-            v = j / (image_height-1)
-
-            r = Ray(origin, lower_left_corner + horizontal*u + vertical*v - origin)
-
-            pixel_colour = ray_colour(r, world)
-
-            render_data.append(colour.write_colour(pixel_colour))
-    print("\nDone.\n")
+            pixel_colour = Vector3(0, 0, 0)
+            for s in range(0, samples_per_pixel):
+                u = (i + utils.rand()) / (image_width-1)
+                v = (j + utils.rand()) / (image_height-1)
+                r = cam.get_ray(u, v)
+                pixel_colour += ray_colour(r, world)
+            render_data.append(colour.write_colour(pixel_colour, samples_per_pixel))
+    print("\nDone.\nTime Spent: %s" % (datetime.now() - start_time))
 
     file = image.write_image(
         width=image_width,
