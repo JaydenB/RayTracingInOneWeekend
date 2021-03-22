@@ -4,4 +4,4 @@ class Ray:
         self.direction = direction
 
     def at(self, t):
-        return self.origin + t*self.direction
+        return self.origin + self.direction*t
