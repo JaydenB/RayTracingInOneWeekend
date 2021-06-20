@@ -12,12 +12,13 @@ class HitRecord:
         self.pos = pos
         self.normal = Vector3(0, 0, 0)
         self.t = t
+        self.material = None
 
         self.front_face = False
 
     def set_face_normal(self, r, outward_normal):
         self.front_face = r.direction.dot(outward_normal) < 0
-        self.normal = outward_normal if self.front_face else -outward_normal
+        self.normal = outward_normal if self.front_face else outward_normal
 
 
 class HittableList(Hittable):

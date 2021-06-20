@@ -1,4 +1,5 @@
 import utils
+import math
 
 
 def write_colour(pixel_colour, samples_per_pixel):
@@ -7,9 +8,9 @@ def write_colour(pixel_colour, samples_per_pixel):
     b = pixel_colour.z
 
     scale = 1.0/samples_per_pixel
-    r *= scale
-    g *= scale
-    b *= scale
+    r = math.sqrt(scale*r)
+    g = math.sqrt(scale*g)
+    b = math.sqrt(scale*b)
 
     return "%s %s %s" % (
         256 * utils.clamp(r, 0.0, 0.999),

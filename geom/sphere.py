@@ -4,9 +4,10 @@ from geom.hittable import Hittable, HitRecord
 
 
 class Sphere(Hittable):
-    def __init__(self, center, radius):
+    def __init__(self, center, radius, mat):
         self.center = center
         self.radius = radius
+        self.material = mat
 
     def hit(self, r, t_min, t_max, rec):
         oc = r.origin - self.center
@@ -29,4 +30,5 @@ class Sphere(Hittable):
         rec.t = root
         rec.pos = r.at(rec.t)
         rec.set_face_normal(r, (rec.pos - self.center) / self.radius)
+        rec.material = self.material
         return True
